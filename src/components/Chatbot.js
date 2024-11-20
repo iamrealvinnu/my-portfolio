@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 const orbitPulse = keyframes`

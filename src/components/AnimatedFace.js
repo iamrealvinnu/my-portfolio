@@ -38,7 +38,7 @@ const FaceModel = ({ speaking }) => {
 };
 
 function AnimatedFace() {
-  const [speaking, setSpeaking] = useState(false);
+  const [speaking] = useState(false);
 
   return (
     <AnimatedFaceContainer>
