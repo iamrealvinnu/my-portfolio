@@ -262,35 +262,11 @@ const Contact = () => {
           I'm always open to discussing new projects, creative ideas, or
           opportunities to be part of your visions.
         </p>
-        <ContactForm onSubmit={handleSubmit}>
-          <Input
-            type="text"
-            name="name"
-            placeholder="Your Name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-          />
-          <Input
-            type="email"
-            name="email"
-            placeholder="Your Email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          <TextArea
-            name="message"
-            placeholder="Your Message"
-            value={formData.message}
-            onChange={handleChange}
-            required
-          />
-          <SubmitButton type="submit">
-            Send Message
-            <i className="fas fa-paper-plane" style={{ marginLeft: '10px' }}></i>
-          </SubmitButton>
-        </ContactForm>
+        <form name="contact" netlify netlify-honeypot="bot-field" hidden>
+          <input type="text" name="name" />
+          <input type="email" name="email" />
+          <textarea name="message"></textarea>
+        </form>
         <SocialLinks>
           <SocialLink href="https://github.com/iamrealvinnu" target="_blank">
             <i className="fab fa-github"></i>
