@@ -137,20 +137,32 @@ const fadeOut = keyframes`
 
 const SuccessPopup = styled.div`
   position: fixed;
-  top: 20px;
-  right: 20px;
-  background: rgba(100, 255, 218, 0.1);
-  border: 1px solid #64ffda;
-  padding: 20px;
-  border-radius: 8px;
-  color: #64ffda;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(100, 255, 218, 0.95);
+  border: 2px solid #64ffda;
+  padding: 25px 35px;
+  border-radius: 12px;
+  color: #0a0a0a;
   backdrop-filter: blur(10px);
   z-index: 1000;
-  animation: ${props => props.isClosing ? fadeOut : fadeIn} 0.3s ease-in-out;
+  animation: ${props => props.isClosing ? fadeOut : fadeIn} 0.5s ease-in-out;
   display: flex;
   align-items: center;
-  gap: 10px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  gap: 15px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  
+  h4 {
+    font-size: 1.2rem;
+    margin: 0 0 5px 0;
+  }
+  
+  p {
+    margin: 0;
+    font-size: 1rem;
+    color: #1a1a1a;
+  }
 `;
 
 const CheckIcon = styled.div`
