@@ -121,35 +121,65 @@ export function EnergyOrb({ onCommand }) {
   const [isActive, setIsActive] = useState(false);
   const [isListening, setIsListening] = useState(false);
 
-  const startListening = () => {
+  const startListening = useCallback(() => {
     setIsListening(true);
+    setIsActive(true);
     console.log('Started listening...');
     
     if ('webkitSpeechRecognition' in window) {
       const recognition = new window.webkitSpeechRecognition();
       recognition.continuous = false;
       recognition.interimResults = false;
+      recognition.lang = 'en-US';
       
       recognition.onstart = () => {
         console.log('Voice recognition started');
+        setIsActive(true);
       };
       
       recognition.onresult = (event) => {
-        const command = event.results[0][0].transcript;
+        const command = event.results[0][0].transcript.toLowerCase();
         console.log('Command received:', command);
-        onCommand(command);
+        
+        if (command.includes('home') || command.includes('about') || 
+            command.includes('projects') || command.includes('contact')) {
+          onCommand(command);
+        }
+        
+        setIsListening(false);
+        setIsActive(false);
       };
       
       recognition.onerror = (event) => {
         console.error('Error:', event.error);
+        setIsListening(false);
+        setIsActive(false);
       };
       
-      recognition.start();
+      recognition.onend = () => {
+        console.log('Voice recognition ended');
+        setIsListening(false);
+        setIsActive(false);
+      };
+      
+      try {
+        recognition.start();
+      } catch (error) {
+        console.error('Recognition error:', error);
+      }
+    } else {
+      alert('Speech recognition is not supported in this browser. Try Chrome or Edge.');
+    }
+  }, [onCommand]);
+
+  const handleClick = () => {
+    if (!isListening) {
+      startListening();
     }
   };
 
   return (
-    <OrbContainer onClick={startListening}>
+    <OrbContainer onClick={handleClick}>
       <Orb isListening={isListening}>
         <OrbitRing duration="4s" />
         <OrbitRing duration="6s" style={{ width: '80%', height: '80%' }} />
@@ -168,7 +198,11 @@ export function EnergyOrb({ onCommand }) {
         </Particles>
         <CoreSphere isActive={isActive || isListening} />
       </Orb>
-      {isListening && <ListeningIndicator>Listening...</ListeningIndicator>}
+      {isListening && (
+        <ListeningIndicator>
+          Listening... Say "home", "about", "projects", or "contact"
+        </ListeningIndicator>
+      )}
     </OrbContainer>
   );
 } 
