@@ -210,7 +210,7 @@ const Contact = () => {
     e.preventDefault();
     
     try {
-      const response = await fetch('http://localhost:5000/api/messages', {
+      await fetch('http://localhost:5000/api/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -218,45 +218,38 @@ const Contact = () => {
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
-          message: formData.message
+          message: formData.message,
+          timestamp: new Date().toISOString()
         })
       });
 
-      if (response.ok) {
-        console.log('Message sent successfully!');
-        // Show success notification
-        setShowNotification(true);
-        // Clear form
-        setFormData({
-          name: '',
-          email: '',
-          message: ''
-        });
-      } else {
-        console.error('Failed to send message');
-      }
+      const formElement = e.target;
+      const formData = new FormData(formElement);
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData).toString(),
+      });
+
+      setShowSuccess(true);
+      // Clear form
+      setFormData({
+        name: '',
+        email: '',
+        message: ''
+      });
+
+      // Hide popup after 5 seconds
+      setTimeout(() => {
+        setIsClosing(true);
+        setTimeout(() => {
+          setShowSuccess(false);
+          setIsClosing(false);
+        }, 300);
+      }, 5000);
     } catch (error) {
       console.error('Error:', error);
     }
-
-    // Show success popup
-    setShowSuccess(true);
-    
-    // Clear form
-    setFormData({
-      name: '',
-      email: '',
-      message: ''
-    });
-
-    // Hide popup after 5 seconds
-    setTimeout(() => {
-      setIsClosing(true);
-      setTimeout(() => {
-        setShowSuccess(false);
-        setIsClosing(false);
-      }, 300);
-    }, 5000);
   };
 
   const handleChange = (e) => {
@@ -288,7 +281,13 @@ const Contact = () => {
           I'm always open to discussing new projects, creative ideas, or
           opportunities to be part of your visions.
         </p>
-        <ContactForm onSubmit={handleSubmit}>
+        <ContactForm 
+          onSubmit={handleSubmit}
+          name="contact" 
+          method="POST" 
+          data-netlify="true"
+        >
+          <input type="hidden" name="form-name" value="contact" />
           <Input
             type="text"
             name="name"
