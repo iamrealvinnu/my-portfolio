@@ -31,9 +31,10 @@ function AppContent() {
   const navigate = useNavigate();
 
   const handleVoiceCommand = (command) => {
+    console.log('Received command:', command);
     const lowerCommand = command.toLowerCase();
     
-    if (lowerCommand.includes('go to home') || lowerCommand.includes('show home')) {
+    if (lowerCommand.includes('home')) {
       navigate('/');
     } else if (lowerCommand.includes('about')) {
       navigate('/about');

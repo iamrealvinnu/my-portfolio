@@ -117,70 +117,90 @@ const ListeningIndicator = styled.div`
   text-shadow: 0 0 10px rgba(255, 165, 0, 0.8);
 `;
 
+const ErrorMessage = styled.div`
+  color: #ff4444;
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+`;
+
 export function EnergyOrb({ onCommand }) {
   const [isActive, setIsActive] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [error, setError] = useState(null);
 
   const startListening = useCallback(() => {
-    setIsListening(true);
-    setIsActive(true);
-    console.log('Started listening...');
-    
-    if ('webkitSpeechRecognition' in window) {
-      const recognition = new window.webkitSpeechRecognition();
-      recognition.continuous = false;
-      recognition.interimResults = false;
-      recognition.lang = 'en-US';
-      
-      recognition.onstart = () => {
-        console.log('Voice recognition started');
-        setIsActive(true);
-      };
-      
-      recognition.onresult = (event) => {
-        const command = event.results[0][0].transcript.toLowerCase();
-        console.log('Command received:', command);
-        
-        if (command.includes('home') || command.includes('about') || 
-            command.includes('projects') || command.includes('contact')) {
-          onCommand(command);
-        }
-        
-        setIsListening(false);
-        setIsActive(false);
-      };
-      
-      recognition.onerror = (event) => {
-        console.error('Error:', event.error);
-        setIsListening(false);
-        setIsActive(false);
-      };
-      
-      recognition.onend = () => {
-        console.log('Voice recognition ended');
-        setIsListening(false);
-        setIsActive(false);
-      };
-      
-      try {
-        recognition.start();
-      } catch (error) {
-        console.error('Recognition error:', error);
-      }
-    } else {
-      alert('Speech recognition is not supported in this browser. Try Chrome or Edge.');
+    // Check if browser supports speech recognition
+    if (!('webkitSpeechRecognition' in window)) {
+      setError('Speech recognition is not supported. Please use Chrome or Edge.');
+      alert('Please use Chrome or Edge browser for voice commands');
+      return;
     }
+
+    // Request microphone permission explicitly
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(() => {
+        const recognition = new window.webkitSpeechRecognition();
+        recognition.continuous = false;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        recognition.onstart = () => {
+          setIsListening(true);
+          setIsActive(true);
+          console.log('🎤 Microphone is active');
+        };
+
+        recognition.onresult = (event) => {
+          const command = event.results[0][0].transcript.toLowerCase();
+          console.log('🗣️ Command received:', command);
+          
+          // Test command handling
+          if (command.includes('home')) {
+            console.log('📍 Navigating to Home');
+            onCommand('go to home');
+          } else if (command.includes('about')) {
+            console.log('📍 Navigating to About');
+            onCommand('about');
+          } else if (command.includes('projects')) {
+            console.log('📍 Navigating to Projects');
+            onCommand('projects');
+          } else if (command.includes('contact')) {
+            console.log('📍 Navigating to Contact');
+            onCommand('contact');
+          }
+        };
+
+        recognition.onerror = (event) => {
+          console.error('🚫 Error:', event.error);
+          setError(`Error: ${event.error}`);
+          setIsListening(false);
+          setIsActive(false);
+        };
+
+        recognition.onend = () => {
+          console.log('🎤 Voice recognition ended');
+          setIsListening(false);
+          setIsActive(false);
+        };
+
+        recognition.start();
+      })
+      .catch(err => {
+        setError('Please allow microphone access');
+        console.error('Microphone access denied:', err);
+      });
   }, [onCommand]);
 
-  const handleClick = () => {
-    if (!isListening) {
-      startListening();
-    }
-  };
-
   return (
-    <OrbContainer onClick={handleClick}>
-      <Orb isListening={isListening}>
+    <OrbContainer>
+      <Orb 
+        isListening={isListening} 
+        onClick={startListening}
+        style={{ cursor: 'pointer' }}
+      >
         <OrbitRing duration="4s" />
         <OrbitRing duration="6s" style={{ width: '80%', height: '80%' }} />
         <OrbitRing duration="8s" style={{ width: '120%', height: '120%' }} />
@@ -200,8 +220,17 @@ export function EnergyOrb({ onCommand }) {
       </Orb>
       {isListening && (
         <ListeningIndicator>
-          Listening... Say "home", "about", "projects", or "contact"
+          🎤 Listening... Try saying:
+          <ul style={{ listStyle: 'none', padding: 0 }}>
+            <li>"Go to Home"</li>
+            <li>"Show About"</li>
+            <li>"Open Projects"</li>
+            <li>"Go to Contact"</li>
+          </ul>
         </ListeningIndicator>
+      )}
+      {error && (
+        <ErrorMessage>{error}</ErrorMessage>
       )}
     </OrbContainer>
   );
