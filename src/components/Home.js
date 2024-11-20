@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import AnimatedFace from './AnimatedFace';
 import Chatbot from './Chatbot';
 
 const HomeContainer = styled.div`
@@ -19,7 +18,6 @@ const HomeContainer = styled.div`
 function Home() {
   return (
     <HomeContainer>
-      <AnimatedFace />
       <Chatbot />
     </HomeContainer>
   );
