@@ -119,28 +119,25 @@ const fadeOut = keyframes`
 
 const SuccessPopup = styled.div`
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  top: 20px;
+  right: 20px;
   background: rgba(100, 255, 218, 0.1);
   border: 1px solid #64ffda;
-  padding: 25px 35px;
-  border-radius: 12px;
+  padding: 20px;
+  border-radius: 8px;
   color: #64ffda;
   backdrop-filter: blur(10px);
   z-index: 1000;
   animation: ${props => props.isClosing ? fadeOut : fadeIn} 0.3s ease-in-out;
   display: flex;
   align-items: center;
-  gap: 15px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  min-width: 300px;
-  max-width: 90%;
+  gap: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
 const CheckIcon = styled.div`
-  width: 30px;
-  height: 30px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   background: #64ffda;
   color: #0a192f;
@@ -148,7 +145,6 @@ const CheckIcon = styled.div`
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  font-size: 18px;
 `;
 
 const Contact = () => {
@@ -249,9 +245,9 @@ const Contact = () => {
         <SuccessPopup isClosing={isClosing}>
           <CheckIcon>✓</CheckIcon>
           <div>
-            <h3 style={{ margin: '0 0 8px 0', color: '#64ffda' }}>Success!</h3>
-            <p style={{ margin: 0, fontSize: '1.1em', color: '#fff' }}>
-              Message sent successfully! We'll get back to you soon.
+            <h4 style={{ margin: '0 0 5px 0' }}>Message Sent Successfully!</h4>
+            <p style={{ margin: 0, fontSize: '0.9em', opacity: 0.8 }}>
+              We'll get back to you as soon as possible.
             </p>
           </div>
         </SuccessPopup>
@@ -262,31 +258,35 @@ const Contact = () => {
           I'm always open to discussing new projects, creative ideas, or
           opportunities to be part of your visions.
         </p>
-        <form 
-          name="contact" 
-          method="POST" 
-          data-netlify="true"
-          data-netlify-honeypot="bot-field"
-        >
-          <input type="hidden" name="form-name" value="contact" />
-          
-          <div>
-            <label>Name:</label>
-            <input type="text" name="name" required />
-          </div>
-
-          <div>
-            <label>Email:</label>
-            <input type="email" name="email" required />
-          </div>
-
-          <div>
-            <label>Message:</label>
-            <textarea name="message" required></textarea>
-          </div>
-
-          <button type="submit">Send Message</button>
-        </form>
+        <ContactForm onSubmit={handleSubmit}>
+          <Input
+            type="text"
+            name="name"
+            placeholder="Your Name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+          <Input
+            type="email"
+            name="email"
+            placeholder="Your Email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          <TextArea
+            name="message"
+            placeholder="Your Message"
+            value={formData.message}
+            onChange={handleChange}
+            required
+          />
+          <SubmitButton type="submit">
+            Send Message
+            <i className="fas fa-paper-plane" style={{ marginLeft: '10px' }}></i>
+          </SubmitButton>
+        </ContactForm>
         <SocialLinks>
           <SocialLink href="https://github.com/iamrealvinnu" target="_blank">
             <i className="fab fa-github"></i>
