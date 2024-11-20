@@ -127,7 +127,7 @@ export function EnergyOrb({ onCommand }) {
 
       recognition.start();
     }
-  }, [onCommand]);
+  }, [onCommand, isListening]);
 
   const speak = (text) => {
     const utterance = new SpeechSynthesisUtterance(text);
