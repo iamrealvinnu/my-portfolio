@@ -90,75 +90,85 @@ const Particle = styled.div`
   animation: ${particlePulse} 2s ease-in-out infinite;
 `;
 
+const OrbContainer = styled.div`
+  position: relative;
+`;
+
+const Orb = styled.div`
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: rgba(255, 165, 0, 0.1);
+  box-shadow: 0 0 50px rgba(255, 165, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: pointer;
+`;
+
+const ListeningIndicator = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  color: #ffd700;
+  text-shadow: 0 0 10px rgba(255, 165, 0, 0.8);
+`;
+
 export function EnergyOrb({ onCommand }) {
   const [isActive, setIsActive] = useState(false);
   const [isListening, setIsListening] = useState(false);
 
-  const startListening = useCallback(() => {
+  const startListening = () => {
+    setIsListening(true);
+    console.log('Started listening...');
+    
     if ('webkitSpeechRecognition' in window) {
       const recognition = new window.webkitSpeechRecognition();
-      recognition.continuous = true;
-      recognition.interimResults = true;
-
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      
       recognition.onstart = () => {
-        setIsListening(true);
-        setIsActive(true);
+        console.log('Voice recognition started');
       };
-
+      
       recognition.onresult = (event) => {
-        const transcript = event.results[event.results.length - 1][0].transcript;
-        
-        if (transcript.toLowerCase().includes('hey jarvis')) {
-          speak("Yes, how can I help you?");
-        } else if (isListening) {
-          onCommand(transcript);
-        }
+        const command = event.results[0][0].transcript;
+        console.log('Command received:', command);
+        onCommand(command);
       };
-
+      
       recognition.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
-        setIsListening(false);
+        console.error('Error:', event.error);
       };
-
-      recognition.onend = () => {
-        setIsListening(false);
-        recognition.start(); // Restart to keep listening
-      };
-
+      
       recognition.start();
     }
-  }, [onCommand, isListening]);
-
-  const speak = (text) => {
-    const utterance = new SpeechSynthesisUtterance(text);
-    window.speechSynthesis.speak(utterance);
   };
 
-  useEffect(() => {
-    startListening();
-    return () => {
-      window.speechSynthesis.cancel();
-    };
-  }, [startListening]);
-
   return (
-    <OrbitSphere>
-      <OrbitRing duration="4s" />
-      <OrbitRing duration="6s" style={{ width: '80%', height: '80%' }} />
-      <OrbitRing duration="8s" style={{ width: '120%', height: '120%' }} />
-      <Particles>
-        {[...Array(20)].map((_, i) => (
-          <Particle
-            key={i}
-            style={{
-              top: `${50 + Math.sin(i * 18) * 45}%`,
-              left: `${50 + Math.cos(i * 18) * 45}%`,
-              animationDelay: `${i * 0.1}s`
-            }}
-          />
-        ))}
-      </Particles>
-      <CoreSphere isActive={isActive || isListening} />
-    </OrbitSphere>
+    <OrbContainer onClick={startListening}>
+      <Orb isListening={isListening}>
+        <OrbitRing duration="4s" />
+        <OrbitRing duration="6s" style={{ width: '80%', height: '80%' }} />
+        <OrbitRing duration="8s" style={{ width: '120%', height: '120%' }} />
+        <Particles>
+          {[...Array(20)].map((_, i) => (
+            <Particle
+              key={i}
+              style={{
+                top: `${50 + Math.sin(i * 18) * 45}%`,
+                left: `${50 + Math.cos(i * 18) * 45}%`,
+                animationDelay: `${i * 0.1}s`
+              }}
+            />
+          ))}
+        </Particles>
+        <CoreSphere isActive={isActive || isListening} />
+      </Orb>
+      {isListening && <ListeningIndicator>Listening...</ListeningIndicator>}
+    </OrbContainer>
   );
 } 
