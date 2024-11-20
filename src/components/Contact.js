@@ -15,6 +15,24 @@ const ContactContent = styled.div`
   max-width: 800px;
   width: 100%;
   text-align: center;
+
+  h2 {
+    color: #ffffff;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  p {
+    color: #ffffff;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    max-width: 600px;
+    margin: 0 auto 2rem auto;
+    opacity: 0.9;
+    letter-spacing: 0.5px;
+  }
 `;
 
 const ContactForm = styled.form`
