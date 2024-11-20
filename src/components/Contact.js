@@ -262,10 +262,30 @@ const Contact = () => {
           I'm always open to discussing new projects, creative ideas, or
           opportunities to be part of your visions.
         </p>
-        <form name="contact" netlify netlify-honeypot="bot-field" hidden>
-          <input type="text" name="name" />
-          <input type="email" name="email" />
-          <textarea name="message"></textarea>
+        <form 
+          name="contact" 
+          method="POST" 
+          data-netlify="true"
+          data-netlify-honeypot="bot-field"
+        >
+          <input type="hidden" name="form-name" value="contact" />
+          
+          <div>
+            <label>Name:</label>
+            <input type="text" name="name" required />
+          </div>
+
+          <div>
+            <label>Email:</label>
+            <input type="email" name="email" required />
+          </div>
+
+          <div>
+            <label>Message:</label>
+            <textarea name="message" required></textarea>
+          </div>
+
+          <button type="submit">Send Message</button>
         </form>
         <SocialLinks>
           <SocialLink href="https://github.com/iamrealvinnu" target="_blank">
