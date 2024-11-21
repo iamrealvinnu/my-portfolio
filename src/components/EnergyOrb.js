@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 
 const orbitPulse = keyframes`
@@ -83,110 +83,59 @@ const CoreSphere = styled.div`
   animation: ${particlePulse} ${props => props.isActive ? '1s' : '2s'} ease-in-out infinite;
 `;
 
-const DebugPanel = styled.div`
-  position: absolute;
-  bottom: -120px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.8);
-  padding: 15px;
-  border-radius: 8px;
-  color: #fff;
-  text-align: center;
-  width: 300px;
-  z-index: 1000;
-  
-  button {
-    margin: 10px 0;
-    padding: 8px 16px;
-    background: #64ffda;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    color: #000;
-    font-weight: bold;
-    
-    &:hover {
-      background: #4ad3b3;
-    }
-  }
-`;
-
-const StatusMessage = styled.div`
-  color: ${props => props.isError ? '#ff4444' : '#64ffda'};
-  margin: 5px 0;
-  font-size: 0.9em;
-`;
-
 export function EnergyOrb({ onCommand }) {
   const [isListening, setIsListening] = useState(false);
-  const [debugMessage, setDebugMessage] = useState('Click to start');
-  const [isError, setIsError] = useState(false);
 
-  const startListening = useCallback(() => {
+  useEffect(() => {
     if (!('webkitSpeechRecognition' in window)) {
-      setDebugMessage('Speech recognition not supported. Please use Chrome.');
-      setIsError(true);
+      console.log('Speech recognition not supported');
       return;
     }
 
     const recognition = new window.webkitSpeechRecognition();
-    recognition.continuous = false;
+    recognition.continuous = true;
     recognition.interimResults = false;
     recognition.lang = 'en-US';
 
-    setDebugMessage('Starting...');
-    setIsError(false);
-
     recognition.onstart = () => {
       setIsListening(true);
-      setDebugMessage('🎤 Listening...');
+      console.log('Voice recognition active');
     };
 
     recognition.onresult = (event) => {
-      const command = event.results[0][0].transcript;
-      setDebugMessage(`Heard: "${command}"`);
+      const command = event.results[event.results.length - 1][0].transcript.toLowerCase();
       console.log('Command received:', command);
       onCommand(command);
     };
 
     recognition.onerror = (event) => {
-      setDebugMessage(`Error: ${event.error}`);
-      setIsError(true);
+      console.error('Error:', event.error);
       setIsListening(false);
     };
 
     recognition.onend = () => {
-      setIsListening(false);
-      setDebugMessage('Ready for next command');
+      recognition.start();
     };
 
     try {
       recognition.start();
     } catch (err) {
-      setDebugMessage(`Error: ${err.message}`);
-      setIsError(true);
+      console.error('Start error:', err);
     }
+
+    return () => {
+      recognition.stop();
+    };
   }, [onCommand]);
 
   return (
     <OrbContainer>
-      <Orb onClick={startListening}>
+      <Orb>
         <OrbitRing duration="4s" />
         <OrbitRing duration="6s" style={{ width: '80%', height: '80%' }} />
         <OrbitRing duration="8s" style={{ width: '120%', height: '120%' }} />
         <CoreSphere isActive={isListening} />
       </Orb>
-
-      <DebugPanel>
-        <StatusMessage isError={isError}>{debugMessage}</StatusMessage>
-        <button onClick={startListening}>
-          {isListening ? '🎤 Listening...' : 'Click to Start'}
-        </button>
-        <div style={{ marginTop: '5px', fontSize: '0.8em', opacity: 0.8 }}>
-          Try saying: "home", "about", "projects", "contact"
-        </div>
-      </DebugPanel>
     </OrbContainer>
   );
 }
