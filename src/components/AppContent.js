@@ -31,17 +31,34 @@ function AppContent() {
   const navigate = useNavigate();
 
   const handleVoiceCommand = (command) => {
-    console.log('Received command:', command);
-    const lowerCommand = command.toLowerCase();
+    console.log('Processing command:', command);
     
-    if (lowerCommand.includes('home')) {
-      navigate('/');
-    } else if (lowerCommand.includes('about')) {
-      navigate('/about');
-    } else if (lowerCommand.includes('projects')) {
-      navigate('/projects');
-    } else if (lowerCommand.includes('contact')) {
-      navigate('/contact');
+    const lowerCommand = command.toLowerCase().trim();
+    
+    switch(lowerCommand) {
+      case 'open projects':
+      case 'show projects':
+      case 'projects':
+        navigate('/projects');
+        break;
+        
+      case 'show about':
+      case 'about':
+        navigate('/about');
+        break;
+        
+      case 'go to home':
+      case 'home':
+        navigate('/');
+        break;
+        
+      case 'contact':
+      case 'go to contact':
+        navigate('/contact');
+        break;
+        
+      default:
+        console.log('Unknown command:', lowerCommand);
     }
   };
 

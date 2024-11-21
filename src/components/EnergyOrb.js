@@ -196,9 +196,14 @@ export function EnergyOrb({ onCommand }) {
       });
   }, [handleVoiceCommand]);
 
+  const testCommand = (command) => {
+    console.log('Testing command:', command);
+    onCommand(command);
+  };
+
   return (
-    <OrbContainer onClick={startListening}>
-      <Orb isListening={isListening}>
+    <OrbContainer>
+      <Orb isListening={isListening} onClick={startListening}>
         <OrbitRing duration="4s" />
         <OrbitRing duration="6s" style={{ width: '80%', height: '80%' }} />
         <OrbitRing duration="8s" style={{ width: '120%', height: '120%' }} />
@@ -227,6 +232,10 @@ export function EnergyOrb({ onCommand }) {
           </CommandList>
         </ListeningIndicator>
       )}
+      <div style={{ position: 'absolute', bottom: -50, left: '50%', transform: 'translateX(-50%)' }}>
+        <button onClick={() => testCommand('about')}>Test About</button>
+        <button onClick={() => testCommand('projects')}>Test Projects</button>
+      </div>
     </OrbContainer>
   );
 } 
