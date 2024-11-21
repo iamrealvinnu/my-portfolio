@@ -90,144 +90,75 @@ const Particle = styled.div`
   animation: ${particlePulse} 2s ease-in-out infinite;
 `;
 
-const OrbContainer = styled.div`
-  position: relative;
-`;
-
-const Orb = styled.div`
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  background: rgba(255, 165, 0, 0.1);
-  box-shadow: 0 0 50px rgba(255, 165, 0, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  cursor: pointer;
-`;
-
-const ListeningIndicator = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  font-size: 24px;
-  color: #ffd700;
-  text-shadow: 0 0 10px rgba(255, 165, 0, 0.8);
-`;
-
-const ErrorMessage = styled.div`
-  color: #ff4444;
-  position: absolute;
-  bottom: -30px;
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
-`;
-
-const CommandList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 10px 0 0;
-  font-size: 0.9em;
-  color: #ffd700;
-`;
-
-const DebugPanel = styled.div`
-  position: absolute;
-  bottom: -100px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0, 0, 0, 0.8);
-  padding: 15px;
-  border-radius: 8px;
-  color: #fff;
-  text-align: center;
-  
-  button {
-    margin: 10px 0;
-    padding: 8px 16px;
-    background: #64ffda;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    
-    &:hover {
-      background: #4ad3b3;
-    }
-  }
-`;
-
 export function EnergyOrb({ onCommand }) {
+  const [isActive, setIsActive] = useState(false);
   const [isListening, setIsListening] = useState(false);
-  const [debugMessage, setDebugMessage] = useState('');
 
   const startListening = useCallback(() => {
-    // Check browser support
-    if (!('webkitSpeechRecognition' in window)) {
-      alert('Speech recognition is not supported. Please use Chrome.');
-      return;
-    }
+    if ('webkitSpeechRecognition' in window) {
+      const recognition = new window.webkitSpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
 
-    const recognition = new window.webkitSpeechRecognition();
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.lang = 'en-US';
+      recognition.onstart = () => {
+        setIsListening(true);
+        setIsActive(true);
+      };
 
-    // Clear previous message
-    setDebugMessage('Starting...');
+      recognition.onresult = (event) => {
+        const transcript = event.results[event.results.length - 1][0].transcript;
+        
+        if (transcript.toLowerCase().includes('hey jarvis')) {
+          speak("Yes, how can I help you?");
+        } else if (isListening) {
+          onCommand(transcript);
+        }
+      };
 
-    recognition.onstart = () => {
-      setIsListening(true);
-      setDebugMessage('🎤 Listening...');
-    };
+      recognition.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+      };
 
-    recognition.onresult = (event) => {
-      const command = event.results[0][0].transcript;
-      setDebugMessage(`Heard: "${command}"`);
-      console.log('Command received:', command);
-      onCommand(command);
-    };
+      recognition.onend = () => {
+        setIsListening(false);
+        recognition.start(); // Restart to keep listening
+      };
 
-    recognition.onerror = (event) => {
-      setDebugMessage(`Error: ${event.error}`);
-      setIsListening(false);
-    };
-
-    recognition.onend = () => {
-      setIsListening(false);
-      setDebugMessage('Stopped listening.');
-    };
-
-    try {
       recognition.start();
-    } catch (err) {
-      setDebugMessage(`Start Error: ${err.message}`);
     }
-  }, [onCommand]);
+  }, [onCommand, isListening]);
+
+  const speak = (text) => {
+    const utterance = new SpeechSynthesisUtterance(text);
+    window.speechSynthesis.speak(utterance);
+  };
+
+  useEffect(() => {
+    startListening();
+    return () => {
+      window.speechSynthesis.cancel();
+    };
+  }, [startListening]);
 
   return (
-    <OrbContainer>
-      <Orb 
-        isListening={isListening} 
-        onClick={startListening}
-        style={{ cursor: 'pointer' }}
-      >
-        <OrbitRing duration="4s" />
-        <OrbitRing duration="6s" style={{ width: '80%', height: '80%' }} />
-        <OrbitRing duration="8s" style={{ width: '120%', height: '120%' }} />
-        <CoreSphere isActive={isListening} />
-      </Orb>
-
-      {/* Debug UI */}
-      <DebugPanel>
-        <div>{debugMessage}</div>
-        <button onClick={startListening}>
-          {isListening ? '🎤 Listening...' : 'Click to Start'}
-        </button>
-        <div>Try saying: "home", "about", "projects", "contact"</div>
-      </DebugPanel>
-    </OrbContainer>
+    <OrbitSphere>
+      <OrbitRing duration="4s" />
+      <OrbitRing duration="6s" style={{ width: '80%', height: '80%' }} />
+      <OrbitRing duration="8s" style={{ width: '120%', height: '120%' }} />
+      <Particles>
+        {[...Array(20)].map((_, i) => (
+          <Particle
+            key={i}
+            style={{
+              top: `${50 + Math.sin(i * 18) * 45}%`,
+              left: `${50 + Math.cos(i * 18) * 45}%`,
+              animationDelay: `${i * 0.1}s`
+            }}
+          />
+        ))}
+      </Particles>
+      <CoreSphere isActive={isActive || isListening} />
+    </OrbitSphere>
   );
-} 
+}
