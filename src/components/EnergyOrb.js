@@ -134,105 +134,100 @@ const CommandList = styled.ul`
   color: #ffd700;
 `;
 
+const DebugPanel = styled.div`
+  position: absolute;
+  bottom: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.8);
+  padding: 15px;
+  border-radius: 8px;
+  color: #fff;
+  text-align: center;
+  
+  button {
+    margin: 10px 0;
+    padding: 8px 16px;
+    background: #64ffda;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    
+    &:hover {
+      background: #4ad3b3;
+    }
+  }
+`;
+
 export function EnergyOrb({ onCommand }) {
   const [isListening, setIsListening] = useState(false);
-
-  const handleVoiceCommand = useCallback((command) => {
-    const lowerCommand = command.toLowerCase();
-    console.log('Received command:', lowerCommand);  // Debug log
-
-    // Map commands to actions
-    const commandMap = {
-      'home': () => onCommand('go to home'),
-      'about': () => onCommand('about'),
-      'projects': () => onCommand('projects'),
-      'contact': () => onCommand('contact')
-    };
-
-    // Check each possible command
-    Object.keys(commandMap).forEach(key => {
-      if (lowerCommand.includes(key)) {
-        commandMap[key]();
-      }
-    });
-  }, [onCommand]);
+  const [debugMessage, setDebugMessage] = useState('');
 
   const startListening = useCallback(() => {
-    // Request microphone permission first
-    navigator.mediaDevices.getUserMedia({ audio: true })
-      .then(() => {
-        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        
-        recognition.lang = 'en-US';
-        recognition.interimResults = false;
-        recognition.maxAlternatives = 1;
+    // Check browser support
+    if (!('webkitSpeechRecognition' in window)) {
+      alert('Speech recognition is not supported. Please use Chrome.');
+      return;
+    }
 
-        recognition.onstart = () => {
-          setIsListening(true);
-          console.log('Voice recognition started'); // Debug log
-        };
+    const recognition = new window.webkitSpeechRecognition();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    recognition.lang = 'en-US';
 
-        recognition.onresult = (event) => {
-          const command = event.results[0][0].transcript;
-          console.log('Voice detected:', command); // Debug log
-          handleVoiceCommand(command);
-        };
+    // Clear previous message
+    setDebugMessage('Starting...');
 
-        recognition.onerror = (event) => {
-          console.error('Voice recognition error:', event.error);
-          setIsListening(false);
-        };
+    recognition.onstart = () => {
+      setIsListening(true);
+      setDebugMessage('🎤 Listening...');
+    };
 
-        recognition.onend = () => {
-          setIsListening(false);
-          console.log('Voice recognition ended'); // Debug log
-        };
+    recognition.onresult = (event) => {
+      const command = event.results[0][0].transcript;
+      setDebugMessage(`Heard: "${command}"`);
+      console.log('Command received:', command);
+      onCommand(command);
+    };
 
-        recognition.start();
-      })
-      .catch(error => {
-        console.error('Microphone access denied:', error);
-        alert('Please allow microphone access to use voice commands');
-      });
-  }, [handleVoiceCommand]);
+    recognition.onerror = (event) => {
+      setDebugMessage(`Error: ${event.error}`);
+      setIsListening(false);
+    };
 
-  const testCommand = (command) => {
-    console.log('Testing command:', command);
-    onCommand(command);
-  };
+    recognition.onend = () => {
+      setIsListening(false);
+      setDebugMessage('Stopped listening.');
+    };
+
+    try {
+      recognition.start();
+    } catch (err) {
+      setDebugMessage(`Start Error: ${err.message}`);
+    }
+  }, [onCommand]);
 
   return (
     <OrbContainer>
-      <Orb isListening={isListening} onClick={startListening}>
+      <Orb 
+        isListening={isListening} 
+        onClick={startListening}
+        style={{ cursor: 'pointer' }}
+      >
         <OrbitRing duration="4s" />
         <OrbitRing duration="6s" style={{ width: '80%', height: '80%' }} />
         <OrbitRing duration="8s" style={{ width: '120%', height: '120%' }} />
-        <Particles>
-          {[...Array(20)].map((_, i) => (
-            <Particle
-              key={i}
-              style={{
-                top: `${50 + Math.sin(i * 18) * 45}%`,
-                left: `${50 + Math.cos(i * 18) * 45}%`,
-                animationDelay: `${i * 0.1}s`
-              }}
-            />
-          ))}
-        </Particles>
         <CoreSphere isActive={isListening} />
       </Orb>
-      {isListening && (
-        <ListeningIndicator>
-          Listening... Try saying:
-          <CommandList>
-            <li>"Go to Home"</li>
-            <li>"Show About"</li>
-            <li>"Open Projects"</li>
-            <li>"Go to Contact"</li>
-          </CommandList>
-        </ListeningIndicator>
-      )}
 
+      {/* Debug UI */}
+      <DebugPanel>
+        <div>{debugMessage}</div>
+        <button onClick={startListening}>
+          {isListening ? '🎤 Listening...' : 'Click to Start'}
+        </button>
+        <div>Try saying: "home", "about", "projects", "contact"</div>
+      </DebugPanel>
     </OrbContainer>
   );
 } 
