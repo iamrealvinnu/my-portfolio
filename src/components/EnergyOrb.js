@@ -232,10 +232,7 @@ export function EnergyOrb({ onCommand }) {
           </CommandList>
         </ListeningIndicator>
       )}
-      <div style={{ position: 'absolute', bottom: -50, left: '50%', transform: 'translateX(-50%)' }}>
-        <button onClick={() => testCommand('about')}>Test About</button>
-        <button onClick={() => testCommand('projects')}>Test Projects</button>
-      </div>
+
     </OrbContainer>
   );
 } 
