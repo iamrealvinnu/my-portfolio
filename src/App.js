@@ -1,12 +1,12 @@
 import React from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import Navbar from './Navbar';
-import { EnergyOrb } from './EnergyOrb';
-import Home from './Home';
-import About from './About';
-import Projects from './Projects';
-import Contact from './Contact';
+import Navbar from './components/Navbar';
+import { EnergyOrb } from './components/EnergyOrb';
+import Home from './components/Home';
+import About from './components/About';
+import Projects from './components/Projects';
+import Contact from './components/Contact';
 
 const AppContainer = styled.div`
   min-height: 100vh;
