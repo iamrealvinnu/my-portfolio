@@ -1,22 +1,16 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
-const flashIn = keyframes`
-  0% { 
+const constructionAnimation = keyframes`
+  0% {
     transform: translateY(-100%);
-    opacity: 0;
   }
-  100% { 
+  10%, 90% {
     transform: translateY(0);
-    opacity: 1;
   }
-`;
-
-const progressFill = keyframes`
-  0% { width: 0%; }
-  30% { width: 35%; }
-  65% { width: 55%; }
-  100% { width: 65%; }
+  100% {
+    transform: translateY(-100%);
+  }
 `;
 
 const digAnimation = keyframes`
@@ -26,10 +20,10 @@ const digAnimation = keyframes`
 `;
 
 const bulldozerMove = keyframes`
-  0% { transform: translateX(100%); }
+  0% { transform: translateX(-100%); }
   45% { transform: translateX(0); }
   55% { transform: translateX(0); }
-  100% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
 `;
 
 const OverlayContainer = styled.div`
@@ -38,14 +32,39 @@ const OverlayContainer = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.25);  /* 75% transparent */
+  background: rgba(0, 0, 0, 0.85);
   z-index: 9999;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   color: #FFA500;
-  animation: ${flashIn} 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: ${constructionAnimation} 8s ease-in-out;
+  animation-fill-mode: forwards;
+`;
+
+const ConstructionText = styled.div`
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+`;
+
+const ProgressText = styled.div`
+  font-size: 1.5rem;
+  margin: 1rem 0;
+`;
+
+const WorkerEmoji = styled.div`
+  font-size: 4rem;
+  animation: ${digAnimation} 1s infinite ease-in-out;
+`;
+
+const Bulldozer = styled.div`
+  font-size: 4rem;
+  animation: ${bulldozerMove} 6s infinite linear;
+  position: absolute;
+  bottom: 20%;
 `;
 
 const ProgressBar = styled.div`
@@ -61,44 +80,11 @@ const ProgressBar = styled.div`
     position: absolute;
     top: 0;
     left: 0;
+    width: 65%;
     height: 100%;
     background: #FFA500;
     border-radius: 10px;
-    animation: ${progressFill} 1.8s ease-out forwards;
   }
-`;
-
-const ConstructionText = styled.div`
-  font-size: 2.5rem;
-  text-align: center;
-  margin-bottom: 2rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
-  font-weight: bold;
-`;
-
-const ProgressText = styled.div`
-  font-size: 1.5rem;
-  margin: 1rem 0;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
-  font-weight: bold;
-  opacity: 0;
-  animation: fadeIn 0.5s ease-out 1s forwards;
-  
-  @keyframes fadeIn {
-    to { opacity: 1; }
-  }
-`;
-
-const WorkerEmoji = styled.div`
-  font-size: 4rem;
-  animation: ${digAnimation} 1s infinite ease-in-out;
-`;
-
-const Bulldozer = styled.div`
-  font-size: 4rem;
-  animation: ${bulldozerMove} 8s infinite linear;
-  position: absolute;
-  bottom: 20%;
 `;
 
 const ConstructionOverlay = () => {
