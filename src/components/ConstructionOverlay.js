@@ -38,8 +38,8 @@ const OverlayContainer = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(4px);
   z-index: 9999;
   display: flex;
   flex-direction: column;
@@ -73,12 +73,15 @@ const ConstructionText = styled.div`
   font-size: 2.5rem;
   text-align: center;
   margin-bottom: 2rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  font-weight: bold;
 `;
 
 const ProgressText = styled.div`
   font-size: 1.5rem;
   margin: 1rem 0;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+  font-weight: bold;
   opacity: 0;
   animation: fadeIn 0.5s ease-out 1s forwards;
   
