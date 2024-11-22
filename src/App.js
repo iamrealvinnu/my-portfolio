@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Navbar from './components/Navbar';
@@ -7,6 +7,7 @@ import Home from './components/Home';
 import About from './components/About';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
+import ConstructionOverlay from './components/ConstructionOverlay';
 
 const AppContainer = styled.div`
   min-height: 100vh;
@@ -29,6 +30,16 @@ const OrbContainer = styled.div`
 
 function AppContent() {
   const navigate = useNavigate();
+  const [showOverlay, setShowOverlay] = useState(true);
+
+  useEffect(() => {
+    // Hide overlay after 8 seconds (matching animation duration)
+    const timer = setTimeout(() => {
+      setShowOverlay(false);
+    }, 8000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleVoiceCommand = (command) => {
     const lowerCommand = command.toLowerCase();
@@ -45,20 +56,23 @@ function AppContent() {
   };
 
   return (
-    <AppContainer>
-      <Navbar />
-      <OrbContainer>
-        <EnergyOrb onCommand={handleVoiceCommand} />
-      </OrbContainer>
-      <ContentContainer>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/projects" element={<Projects />} />
-          <Route path="/contact" element={<Contact />} />
-        </Routes>
-      </ContentContainer>
-    </AppContainer>
+    <>
+      {showOverlay && <ConstructionOverlay />}
+      <AppContainer>
+        <Navbar />
+        <OrbContainer>
+          <EnergyOrb onCommand={handleVoiceCommand} />
+        </OrbContainer>
+        <ContentContainer>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/projects" element={<Projects />} />
+            <Route path="/contact" element={<Contact />} />
+          </Routes>
+        </ContentContainer>
+      </AppContainer>
+    </>
   );
 }
 
