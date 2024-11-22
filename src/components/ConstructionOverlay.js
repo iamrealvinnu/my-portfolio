@@ -6,7 +6,7 @@ const flashIn = keyframes`
     transform: translateY(-100%);
     opacity: 0;
   }
-  10% { 
+  100% { 
     transform: translateY(0);
     opacity: 1;
   }
@@ -38,14 +38,15 @@ const OverlayContainer = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
   z-index: 9999;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   color: #FFA500;
-  animation: ${flashIn} 0.5s ease-out;
+  animation: ${flashIn} 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 `;
 
 const ProgressBar = styled.div`
@@ -64,7 +65,7 @@ const ProgressBar = styled.div`
     height: 100%;
     background: #FFA500;
     border-radius: 10px;
-    animation: ${progressFill} 2s ease-out forwards;
+    animation: ${progressFill} 1.8s ease-out forwards;
   }
 `;
 
