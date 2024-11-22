@@ -58,6 +58,24 @@ const NavLink = styled(Link)`
   }
 `;
 
+const NavLinks = styled.div`
+  display: flex;
+  gap: 30px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  
+  a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s ease;
+    
+    &:hover {
+      color: #FFA500;
+    }
+  }
+`;
+
 function Navbar() {
   return (
     <Nav>
