@@ -221,43 +221,33 @@ const Contact = () => {
     e.preventDefault();
     
     try {
+      // Show success message immediately
+      setShowSuccess(true);
+      
+      // Reset form data
+      setFormData({
+        name: "",
+        email: "",
+        message: ""
+      });
+
+      // Hide success message after 5 seconds
+      setTimeout(() => {
+        setShowSuccess(false);
+      }, 5000);
+
+      // Your existing API call if needed
       await fetch('http://localhost:5000/api/messages', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          message: formData.message,
+          ...formData,
           timestamp: new Date().toISOString()
         })
       });
 
-      const formElement = e.target;
-      const formData = new FormData(formElement);
-      fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formData).toString(),
-      });
-
-      setShowSuccess(true);
-      // Clear form
-      setFormData({
-        name: '',
-        email: '',
-        message: ''
-      });
-
-      // Hide popup after 5 seconds
-      setTimeout(() => {
-        setIsClosing(true);
-        setTimeout(() => {
-          setShowSuccess(false);
-          setIsClosing(false);
-        }, 300);
-      }, 5000);
     } catch (error) {
       console.error('Error:', error);
     }
