@@ -177,6 +177,17 @@ const CheckIcon = styled.div`
   font-weight: bold;
 `;
 
+const SuccessMessage = styled.div`
+  color: #64ffda;  // or any color you prefer
+  background: rgba(100, 255, 218, 0.1);
+  padding: 1rem;
+  border-radius: 4px;
+  margin-top: 1rem;
+  text-align: center;
+  opacity: ${({ show }) => (show ? '1' : '0')};
+  transition: opacity 0.3s ease;
+`;
+
 const Contact = () => {
   const contactRef = useRef(null);
   const [showNotification, setShowNotification] = useState(false);
