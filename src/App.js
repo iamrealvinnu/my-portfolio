@@ -1,13 +1,12 @@
 import React from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import Navbar from './components/Navbar';
+import Navbar from './Navbar';
 import { EnergyOrb } from './EnergyOrb';
 import Home from './Home';
 import About from './About';
 import Projects from './Projects';
 import Contact from './Contact';
-import ConstructionOverlay from './components/ConstructionOverlay';
 
 const AppContainer = styled.div`
   min-height: 100vh;
@@ -46,23 +45,20 @@ function AppContent() {
   };
 
   return (
-    <>
-      <AppContainer>
-        <Navbar />
-        <OrbContainer>
-          <EnergyOrb onCommand={handleVoiceCommand} />
-        </OrbContainer>
-        <ContentContainer>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/projects" element={<Projects />} />
-            <Route path="/contact" element={<Contact />} />
-          </Routes>
-        </ContentContainer>
-      </AppContainer>
-      <ConstructionOverlay />
-    </>
+    <AppContainer>
+      <Navbar />
+      <OrbContainer>
+        <EnergyOrb onCommand={handleVoiceCommand} />
+      </OrbContainer>
+      <ContentContainer>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/projects" element={<Projects />} />
+          <Route path="/contact" element={<Contact />} />
+        </Routes>
+      </ContentContainer>
+    </AppContainer>
   );
 }
 
