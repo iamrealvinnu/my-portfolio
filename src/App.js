@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import Navbar from './Navbar';
+import Navbar from './components/Navbar';
 import { EnergyOrb } from './EnergyOrb';
 import Home from './Home';
 import About from './About';
