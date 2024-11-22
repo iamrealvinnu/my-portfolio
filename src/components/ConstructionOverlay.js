@@ -1,18 +1,6 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
-const constructionAnimation = keyframes`
-  0% {
-    transform: translateY(-100%);
-  }
-  10%, 90% {
-    transform: translateY(0);
-  }
-  100% {
-    transform: translateY(-100%);
-  }
-`;
-
 const digAnimation = keyframes`
   0% { transform: translateY(0); }
   50% { transform: translateY(-10px); }
@@ -39,8 +27,23 @@ const OverlayContainer = styled.div`
   justify-content: center;
   align-items: center;
   color: #FFA500;
-  animation: ${constructionAnimation} 8s ease-in-out;
-  animation-fill-mode: forwards;
+`;
+
+const DismissButton = styled.button`
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 8px 16px;
+  background: #FFA500;
+  border: none;
+  border-radius: 4px;
+  color: black;
+  cursor: pointer;
+  font-weight: bold;
+  
+  &:hover {
+    background: #FF8C00;
+  }
 `;
 
 const ConstructionText = styled.div`
@@ -87,7 +90,7 @@ const ProgressBar = styled.div`
   }
 `;
 
-const ConstructionOverlay = () => {
+const ConstructionOverlay = ({ onDismiss }) => {
   return (
     <OverlayContainer>
       <ConstructionText>
@@ -98,6 +101,11 @@ const ConstructionOverlay = () => {
       <WorkerEmoji>👷‍♂️</WorkerEmoji>
       <Bulldozer>🚛</Bulldozer>
       <ProgressText>Check back soon for more amazing features!</ProgressText>
+      {onDismiss && (
+        <DismissButton onClick={onDismiss}>
+          Continue to Site →
+        </DismissButton>
+      )}
     </OverlayContainer>
   );
 };
