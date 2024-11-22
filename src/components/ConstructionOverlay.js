@@ -38,7 +38,7 @@ const OverlayContainer = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(0, 0, 0, 0.25);  /* This makes it 75% transparent */
   backdrop-filter: blur(4px);
   z-index: 9999;
   display: flex;
