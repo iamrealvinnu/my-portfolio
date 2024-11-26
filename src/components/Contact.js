@@ -188,6 +188,12 @@ const SuccessMessage = styled.div`
   transition: opacity 0.3s ease;
 `;
 
+const ContactTitle = styled.h2`
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  // ... other styles
+`;
+
 const Contact = () => {
   const contactRef = useRef(null);
   const [showNotification, setShowNotification] = useState(false);
@@ -277,7 +283,7 @@ const Contact = () => {
         </SuccessPopup>
       )}
       <ContactContent className="contact-content">
-        <h2>Get In Touch</h2>
+        <ContactTitle>Get In Touch</ContactTitle>
         <p>
           I'm always open to discussing new projects, creative ideas, or
           opportunities to be part of your visions.

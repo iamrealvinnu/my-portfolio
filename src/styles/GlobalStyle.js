@@ -8,20 +8,17 @@ const GlobalStyle = createGlobalStyle`
   }
 
   body {
-    font-family: 'Inter', sans-serif;
-    background: #0f0f0f;
-    color: white;
+    margin: 0;
+    padding: 0;
+    background: rgba(10, 15, 25, 0.95);
     overflow-x: hidden;
+    width: 100%;
   }
 
-  section {
-    min-height: 100vh;
-    padding: 100px 50px;
-    position: relative;
-  }
-
-  h1, h2, h3, h4, h5, h6 {
-    margin-bottom: 1rem;
+  #root {
+    width: 100%;
+    margin: 0;
+    padding: 0;
   }
 `;
 

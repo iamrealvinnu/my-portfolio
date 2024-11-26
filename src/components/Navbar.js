@@ -15,7 +15,6 @@ const Nav = styled.nav`
   right: 0;
   z-index: 10;
   backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(100, 255, 218, 0.1);
 `;
 
 const Logo = styled(Link)`
@@ -35,7 +34,7 @@ const NavMenu = styled.div`
   transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 8px;
 
   @media screen and (max-width: 768px) {
     display: none;
@@ -47,11 +46,15 @@ const NavLink = styled(Link)`
   display: flex;
   align-items: center;
   text-decoration: none;
-  padding: 0 0.8rem;
+  padding: 0 0.5rem;
   height: 100%;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
-  font-size: 1rem;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 
   &:hover {
     color: #64ffda;
@@ -60,15 +63,19 @@ const NavLink = styled(Link)`
 
 const NavLinks = styled.div`
   display: flex;
-  gap: 30px;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 500;
+  gap: 15px;
+  align-items: center;
   
   a {
     color: #fff;
     text-decoration: none;
-    font-size: 1.1rem;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
     transition: color 0.3s ease;
+    padding: 5px 10px;
     
     &:hover {
       color: #FFA500;

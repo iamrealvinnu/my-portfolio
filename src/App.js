@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Navbar from './components/Navbar';
@@ -7,11 +7,12 @@ import Home from './components/Home';
 import About from './components/About';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
-import ConstructionOverlay from './components/ConstructionOverlay';
+import GlobalStyle from './styles/GlobalStyle';
 
 const AppContainer = styled.div`
   min-height: 100vh;
   background: rgba(10, 15, 25, 0.95);
+  color: white;
 `;
 
 const ContentContainer = styled.div`
@@ -30,16 +31,6 @@ const OrbContainer = styled.div`
 
 function AppContent() {
   const navigate = useNavigate();
-  const [showOverlay, setShowOverlay] = useState(true);
-
-  useEffect(() => {
-    // Hide overlay after 8 seconds (matching animation duration)
-    const timer = setTimeout(() => {
-      setShowOverlay(false);
-    }, 8000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const handleVoiceCommand = (command) => {
     const lowerCommand = command.toLowerCase();
@@ -57,7 +48,7 @@ function AppContent() {
 
   return (
     <>
-      {showOverlay && <ConstructionOverlay />}
+      <GlobalStyle />
       <AppContainer>
         <Navbar />
         <OrbContainer>

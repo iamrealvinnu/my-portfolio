@@ -58,6 +58,13 @@ const SectionTitle = styled.h2`
   margin-bottom: 50px;
 `;
 
+const ProjectTitle = styled.h3`
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 600;
+  color: #64ffda;
+  margin-bottom: 15px;
+`;
+
 const Projects = () => {
   const projectsRef = useRef(null);
 
@@ -111,7 +118,7 @@ const Projects = () => {
             className="project-card"
             onClick={() => window.open(project.link, "_blank")}
           >
-            <h3>{project.title}</h3>
+            <ProjectTitle>{project.title}</ProjectTitle>
             <p>{project.description}</p>
             <div className="tech-stack">
               {project.tech.map((tech, i) => (

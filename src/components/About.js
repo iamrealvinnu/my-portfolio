@@ -58,19 +58,25 @@ const List = styled.ul`
   }
 `;
 
+const AboutText = styled.p`
+  font-family: 'Roboto', sans-serif;
+  line-height: 1.6;
+  // ... other styles
+`;
+
 function About() {
   return (
     <AboutContainer>
       <Section>
         <Title></Title>
-        <p>
+        <AboutText>
           Hi, I'm Vinay Gupta 👋
           <br /><br />
           An AI and Machine Learning enthusiast with a keen interest in neural networks, 
           computer vision, natural language processing (NLP), and large language models (LLMs). 
           I enjoy exploring how cutting-edge technology can solve real-world problems and 
           enhance everyday experiences.
-        </p>
+        </AboutText>
       </Section>
 
       <Section>

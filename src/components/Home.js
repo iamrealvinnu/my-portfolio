@@ -15,6 +15,18 @@ const HomeContainer = styled.div`
   }
 `;
 
+const HomeTitle = styled.h1`
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  // ... other styles
+`;
+
+const HomeSubtitle = styled.p`
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  // ... other styles
+`;
+
 function Home() {
   return (
     <HomeContainer>
